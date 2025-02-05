@@ -34,25 +34,37 @@ ui <- fluidPage(
     "))
   ),
   
-  # Add this inside your `ui` function, where you want the banner to appear
+  # Title Section
   div(class = "title-section",
-      img(src = "banner-growth.png", class = "banner"),  # Loads image from www/ folder
+      img(src = "banner-growth.png", class = "banner"),  # Ensure this image exists in www/ folder
       div(class = "title", "Chicago Growth Project: Internal Insights Dashboard"),
       div(class = "subtitle", "Interactive voter turnout & spatial analysis for internal strategy"),
       div(class = "source", "Source: Races - 2023 Municipality Turnout")
   ),
   
+  # Sidebar & Map Layout
   sidebarLayout(
     sidebarPanel(
-      selectInput("var", "Select Variable:", 
-                  choices = c("Turnout", "Registered Voters", "Ballots Cast")),
-      downloadButton("downloadMap", "Download Map as PNG")
+      class = "sidebar",
+      selectInput("var", "Select Data to Visualize:", 
+                  choices = c("Turnout", "Registered Voters", "Ballots Cast"),
+                  selected = "Turnout"),
+      downloadButton("export_map", "Download Map as PNG"),
+      p("This internal tool enables spatial data exploration for team insights.")
     ),
     
     mainPanel(
       div(class = "map-container",
           leafletOutput("map", width = "100%", height = "650px")  # Adjust height
       )
+    )
+  ),
+  
+  # Footer
+  tags$footer(
+    div(
+      style = "text-align: center; padding: 10px; font-size: 14px; color: #555;",
+      HTML("Made with ❤️ by <b>HollyTech</b>")
     )
   )
 )
@@ -78,14 +90,15 @@ server <- function(input, output, session) {
       addLegend(pal = pal, values = data[[input$var]], title = input$var, opacity = 1)
   })
   
-  output$downloadMap <- downloadHandler(
+  # Fix the download button to properly save as PNG
+  output$export_map <- downloadHandler(
     filename = function() { paste0("chicago_turnout_map_", input$var, ".png") },
     content = function(file) {
-      mapshot(output$map(), file = file, vwidth = 1000, vheight = 800)
+      mapshot(leafletProxy("map"), file = file, vwidth = 1000, vheight = 800)
     }
   )
 }
 
-
 # Run App
 shinyApp(ui = ui, server = server)
+
