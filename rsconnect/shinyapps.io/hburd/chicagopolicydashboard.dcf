@@ -1,0 +1,10 @@
+name: chicagopolicydashboard
+title:
+username: hburd
+account: hburd
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13915730
+bundleId: 9754675
+url: https://hburd.shinyapps.io/chicagopolicydashboard/
+version: 1

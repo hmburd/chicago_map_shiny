@@ -1,4 +1,12 @@
-# Load necessary libraries
+if (!requireNamespace("shiny", quietly = TRUE)) install.packages("shiny")
+if (!requireNamespace("leaflet", quietly = TRUE)) install.packages("leaflet")
+if (!requireNamespace("sf", quietly = TRUE)) install.packages("sf")
+if (!requireNamespace("dplyr", quietly = TRUE)) install.packages("dplyr")
+if (!requireNamespace("readr", quietly = TRUE)) install.packages("readr")
+if (!requireNamespace("shinythemes", quietly = TRUE)) install.packages("shinythemes")
+if (!requireNamespace("mapview", quietly = TRUE)) install.packages("mapview")
+if (!requireNamespace("webshot2", quietly = TRUE)) install.packages("webshot2")
+
 library(shiny)
 library(leaflet)
 library(sf)
@@ -7,6 +15,7 @@ library(readr)
 library(shinythemes)
 library(mapview)
 library(webshot2)
+
 
 # Load Data
 data <- read_csv("data/merged_turnout_data_cleaned.csv")
@@ -90,13 +99,16 @@ server <- function(input, output, session) {
       addLegend(pal = pal, values = data[[input$var]], title = input$var, opacity = 1)
   })
   
-  # Fix the download button to properly save as PNG
-  output$export_map <- downloadHandler(
+  if (!requireNamespace("webshot2", quietly = TRUE)) install.packages("webshot2")
+  
+  output$downloadMap <- downloadHandler(
     filename = function() { paste0("chicago_turnout_map_", input$var, ".png") },
     content = function(file) {
-      mapshot(leafletProxy("map"), file = file, vwidth = 1000, vheight = 800)
+      webshot::install_phantomjs()  # Ensure PhantomJS is installed
+      mapshot(output$map(), file = file, vwidth = 1000, vheight = 800)
     }
   )
+  
 }
 
 # Run App
