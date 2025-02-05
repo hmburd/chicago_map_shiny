@@ -1,5 +1,5 @@
-if (!requireNamespace("shiny", quietly = TRUE)) install.packages("shiny")
 if (!requireNamespace("leaflet", quietly = TRUE)) install.packages("leaflet")
+if (!requireNamespace("shiny", quietly = TRUE)) install.packages("shiny")
 if (!requireNamespace("sf", quietly = TRUE)) install.packages("sf")
 if (!requireNamespace("dplyr", quietly = TRUE)) install.packages("dplyr")
 if (!requireNamespace("readr", quietly = TRUE)) install.packages("readr")
